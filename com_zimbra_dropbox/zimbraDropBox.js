@@ -85,23 +85,28 @@ function() {
 		    var editor = view.getHtmlEditor();
 		    //editor.focus();
 		    var editorContent =  editor.getContent();
-		    var isHtml = view && view.getComposeMode() === DwtHtmlEditor.HTML;
+		    var isHtml = view && view.getComposeMode().match(/html/gi); // var isHtml = view && view.getComposeMode() === DwtHtmlEditor.HTML;
 		    if (isHtml) {
-			    var thumbnail = files[0].thumbnails && files[0].thumbnails["64x64"] ? files[0].thumbnails["64x64"] : files[0].icon;
+			    var endId = tinymce.DOM.uniqueId();
+				var thumbnail = files[0].thumbnails && files[0].thumbnails["64x64"] ? files[0].thumbnails["64x64"] : files[0].icon;
 
 			    var div = '<div style="background-color:rgb(245, 245, 245); padding:10px 14px; margin-right:10px; color:rgb(34, 34, 34); '; 
                 div+='font-family:arial; font-style:normal; font-weight:bold; font-size:13px; cursor:default; border:1px solid rgb(221, 221, 221); float:left;">';
 				div+='<a href="' + files[0].link + '" target="_blank"><img style="padding-bottom:7px; border:none;" width="64" height="64" src="' + thumbnail + '"></a>';
 				div+='<div dir="ltr" title="File Name" style="color:rgb(17, 85, 204); text-decoration:initial; vertical-align:bottom;">';
 			    div+='<a href="' + files[0].link + '" target="_blank" style=" display:inline-block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-decoration:none; text-align:center; cursor:pointer;padding:1px 0; border:none; max-width:200px;">' + files[0].name + '</div></a>';
-				div+='</div><div style="clear:both"><br/></div>';
+				div+='</div><div style="clear:both"><br/></div><span id="' + endId + '">&nbsp;</span>';
   
 			    var ed = editor.getEditor();
-			    editor.restoreFocus(ed);
+			    //editor.restoreFocus(ed);
 
 			    //tinymce modifies the source when using mceInsertContent
 			    //ed.execCommand('mceInsertContent', false, html.join(""), {skip_undo : 1});
 			    ed.execCommand('mceInsertRawHTML', false, div, {skip_undo : 1});
+
+				//select filler span to jump the cursor to
+			    var newNode = ed.dom.select('span#' + endId);
+                ed.selection.select(newNode[0]);
 		    }
 		    else {
 			    view.getHtmlEditor().setContent(editorContent + "\n" + files[0].name + " : " + files[0].link + "\n");
@@ -323,7 +328,7 @@ function(result) {
 	return;
 };
 
-// Loads the dropbox api
+// Loads the google maps api
 DropboxZimlet.prototype._loadDropboxChooser = function() {
 	var script = document.createElement("script");
 	script.type = "text/javascript";
