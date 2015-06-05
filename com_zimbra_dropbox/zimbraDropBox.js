@@ -85,7 +85,7 @@ function() {
 		    var editor = view.getHtmlEditor();
 		    //editor.focus();
 		    var editorContent =  editor.getContent();
-		    var isHtml = view && view.getComposeMode() === DwtHtmlEditor.HTML;
+		    var isHtml = view && view.getComposeMode().match(/html/gi); // var isHtml = view && view.getComposeMode() === DwtHtmlEditor.HTML;
 		    if (isHtml) {
 			    var thumbnail = files[0].thumbnails && files[0].thumbnails["64x64"] ? files[0].thumbnails["64x64"] : files[0].icon;
 
@@ -97,7 +97,7 @@ function() {
 				div+='</div><div style="clear:both"><br/></div>';
   
 			    var ed = editor.getEditor();
-			    editor.restoreFocus(ed);
+			    //editor.restoreFocus(ed);
 
 			    //tinymce modifies the source when using mceInsertContent
 			    //ed.execCommand('mceInsertContent', false, html.join(""), {skip_undo : 1});
